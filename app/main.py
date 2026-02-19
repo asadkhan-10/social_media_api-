@@ -8,16 +8,10 @@ from psycopg.rows import dict_row
 import time
 from sqlalchemy.orm import Session
 from . import models
-from .database import engine,SessionLocal
+from .database import engine,get_db
 
 models.Base.metadata.create_all(bind=engine)
 
-def get_db():
-    db=SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 while True:
     try:
@@ -63,10 +57,11 @@ def root():
     return {"message": "Hello World"}
 
 @app.get("/posts")
-def get_posts():
+def get_posts(db: Session = Depends(get_db)):
     # with conn.cursor() as cursor:
-        cursor.execute(""" SELECT * FROM posts""")
-        posts= cursor.fetchall()
+        # cursor.execute(""" SELECT * FROM posts""")
+        # posts= cursor.fetchall()
+        posts=db.query(models.Post).all()
         return {"data": posts}
 
 
@@ -120,6 +115,3 @@ def update_post(id: int, post:Post):
 
 
 
-@app.get("/sqlalchemy")
-def test_sql(db: Session = Depends(get_db)):
-    return {"message":"success"}
