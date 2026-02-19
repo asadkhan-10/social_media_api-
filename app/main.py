@@ -1,11 +1,24 @@
 from typing import Optional
-from fastapi import FastAPI,HTTPException,Response, status
+from fastapi import FastAPI,HTTPException,Response, status,Depends
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
 import psycopg
 from psycopg.rows import dict_row
 import time
+from sqlalchemy.orm import Session
+from . import models
+from .database import engine,SessionLocal
+
+models.Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db=SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 while True:
     try:
         conn = psycopg.connect(
@@ -104,3 +117,9 @@ def update_post(id: int, post:Post):
     
     
     return {"data": updated_post}
+
+
+
+@app.get("/sqlalchemy")
+def test_sql(db: Session = Depends(get_db)):
+    return {"message":"success"}
