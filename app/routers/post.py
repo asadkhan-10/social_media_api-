@@ -63,7 +63,7 @@ def delete_posts(  # Fixed typo: delete_postS → delete_posts
         )
 
     # Fixed: Use current_user parameter instead of calling function
-    if post.owner_id != current_user.id:
+    if post.owner_id != current_user.id:  # pyright: ignore[reportGeneralTypeIssues]
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform this action",
