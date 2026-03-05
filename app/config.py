@@ -21,30 +21,36 @@ class Settings(BaseSettings):
     env_file: ClassVar[str] = ".env"  # fallback for local development
 
     class Config:
-        # Allow environment variables to override with proper types
         env_file_encoding = "utf-8"
+        case_sensitive = True
 
 
-# Helper function to detect Railway environment
 def get_env_settings() -> Settings:
-    # Railway injects PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE
-    if os.getenv("PGHOST"):
-        return Settings(
-            database_hostname=os.environ["PGHOST"],
-            database_port=int(os.environ["PGPORT"]),
-            database_username=os.environ["PGUSER"],
-            database_password=os.environ["PGPASSWORD"],
-            database_name=os.environ["PGDATABASE"],
-            secret_key=os.environ.get(
-                "SECRET_KEY", "devsecret"
-            ),  # fallback for local dev
-            algorithm=os.environ.get("ALGORITHM", "HS256"),
-            access_token_expire_minutes=int(
-                os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
-            ),
-        )
-    # Local .env fallback
-    return Settings()  # type: ignore
+    """
+    Detect Railway environment variables. If present, use them.
+    Otherwise, fallback to local .env file.
+    """
+    try:
+        pg_port = os.getenv("PGPORT")
+        if pg_port is not None:
+            return Settings(
+                database_hostname=os.getenv("PGHOST", "localhost"),
+                database_port=int(pg_port),
+                database_username=os.getenv("PGUSER", "postgres"),
+                database_password=os.getenv("PGPASSWORD", "postgres"),
+                database_name=os.getenv("PGDATABASE", "fastapi"),
+                secret_key=os.getenv("SECRET_KEY", "devsecret"),
+                algorithm=os.getenv("ALGORITHM", "HS256"),
+                access_token_expire_minutes=int(
+                    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
+                ),
+            )
+    except ValueError:
+        # In case PGPORT is not a valid int, fallback to .env
+        pass
+
+    # Fallback to Pydantic .env handling
+    return Settings()
 
 
 # Load settings
