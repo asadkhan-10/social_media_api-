@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     database_hostname: str
-    database_port: int
+    database_port: int = 5432
     database_password: str
     database_name: str
     database_username: str
