@@ -1,4 +1,4 @@
-from pydantic import env_settings
+# from pydantic import env_settings
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
 
     model_config = SettingsConfigDict(env_file=".env")
+    env_prefix = "PG"  # <-- this makes pydantic read PGHOST, PGPORT etc.
+    # env_file = ".env"  # optional if you have a local .env
+    env_file_encoding = "utf-8"
 
 
 settings = Settings()  # pyright: ignore[reportCallIssue]
