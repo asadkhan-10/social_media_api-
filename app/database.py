@@ -1,25 +1,20 @@
-import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from app.config import settings  # import your Pydantic settings
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+# Build the DATABASE_URL from Pydantic settings
+DATABASE_URL = (
+    f"postgresql://{settings.database_username}:"
+    f"{settings.database_password}@"
+    f"{settings.database_hostname}:"
+    f"{settings.database_port}/"
+    f"{settings.database_name}"
+)
 
-if not SQLALCHEMY_DATABASE_URL:
-    raise ValueError("DATABASE_URL environment variable is not set")
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_pre_ping=True)
-
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 # for working with raw sql
