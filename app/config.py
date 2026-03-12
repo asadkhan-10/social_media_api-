@@ -38,7 +38,7 @@ def get_env_settings() -> Settings:
             ),
         )
     # Local fallback
-    return Settings()
+    return Settings()  # type: ignore
 
 
 # Load settings
