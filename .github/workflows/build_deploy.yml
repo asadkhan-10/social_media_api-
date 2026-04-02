@@ -8,4 +8,4 @@ jobs:
             - name: pulling git repo
               uses: actions/checkout@2
             - name: say hi to asad
-              run:  echo "hi asad"
+              run:  echo "hi asadd"
