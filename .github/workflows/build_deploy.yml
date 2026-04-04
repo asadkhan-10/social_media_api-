@@ -10,7 +10,7 @@ jobs:
                 image: postgres
                 env:
                     POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-                    POSTGRES_DB: ${{ vars.DATABASE_NAME }}
+                    POSTGRES_DB: ${{ vars.DATABASE_NAME }}_test
                     POSTGRES_USER: ${{ vars.DATABASE_USERNAME }}
                 ports:
                     - 5432:5432
@@ -49,4 +49,3 @@ jobs:
               run: |
                 pip install pytest
                 pytest
-                
