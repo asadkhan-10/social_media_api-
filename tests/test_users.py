@@ -49,7 +49,11 @@ def test_login_user(test_user, client):
     ],
 )
 def test_incorrect_login(test_user, client, email, password, status_code):
-    res = client.post("/login", data={"username": email, "password": password})
+    form_data = {}
+    if email is not None:
+        form_data["username"] = email
+    if password is not None:
+        form_data["password"] = password
 
+    res = client.post("/login", data=form_data)
     assert res.status_code == status_code
-    # assert res.json().get('detail') == 'Invalid Credentials'
