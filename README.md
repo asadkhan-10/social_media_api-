@@ -2,15 +2,6 @@
 
 A RESTful API built with FastAPI for a social media platform, following the freeCodeCamp tutorial.
 
-## 🚀 Features (Work in Progress)
-- ✅ User authentication
-- ✅ CRUD operations for posts
-- ✅ Database integration (PostgreSQL)
-- ✅ SQLAlchemy ORM
-- 🔄 JWT authentication (in progress)
-- 🔄 Relationships and joins
-- 🔄 Deployment to cloud
-
 ## 🛠️ Tech Stack
 - **Framework:** FastAPI
 - **Database:** PostgreSQL
